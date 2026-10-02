@@ -6,7 +6,7 @@ export default function BottomNav({ navigation, activeScreen }) {
     const tabs = [
         {
             name: 'Dashboard',
-            icon: 'home',
+            icon: 'home-outline',
             activeIcon: 'home',
             label: 'Início',
         },
@@ -35,9 +35,7 @@ export default function BottomNav({ navigation, activeScreen }) {
                             style={styles.tab}
                             onPress={() => {
                                 if (activeScreen !== tab.name) {
-                                    navigation.navigate('Main', {
-                                        screen: tab.name,
-                                    });
+                                    navigation.navigate(tab.name);
                                 }
                             }}
                             activeOpacity={0.7}>

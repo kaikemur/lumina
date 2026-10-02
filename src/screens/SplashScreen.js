@@ -41,14 +41,14 @@ export default function SplashScreen({ navigation }) {
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.replace('Main')}
+                onPress={() => navigation.replace('Dashboard')}
                 activeOpacity={0.8}>
                 <Text style={styles.buttonText}>Iniciar Medição</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
                 style={styles.secondaryButton}
-                onPress={() => navigation.replace('Main')}
+                onPress={() => navigation.replace('Dashboard')}
                 activeOpacity={0.8}>
                 <Text style={styles.secondaryButtonText}>Ver Histórico</Text>
             </TouchableOpacity>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useLightSensor } from 'expo-sensors';
+import { LightSensor } from 'expo-sensors'; // <-- IMPORTAÇÃO CORRIGIDA
 import { Ionicons } from '@expo/vector-icons';
 import LuxGauge from '../components/LuxGauge';
 import { useMeasurements } from '../context/MeasurementContext';
@@ -26,15 +26,15 @@ export default function MeasurementScreen({ navigation }) {
     }, []);
 
     const startSensor = () => {
-        setSubscription(
-            useLightSensor.addListener((data) => {
-                const lux = data.illuminance || 0;
-                setCurrentLux(lux);
-                if (lux > maxLux) setMaxLux(lux);
-                if (lux < minLux && lux > 0) setMinLux(lux);
-            }),
-        );
-        useLightSensor.setUpdateInterval(500);
+        const sub = LightSensor.addListener((data) => {
+            // <-- MÉTODO CORRIGIDO
+            const lux = data.illuminance || 0;
+            setCurrentLux(lux);
+            if (lux > maxLux) setMaxLux(lux);
+            if (lux < minLux && lux > 0) setMinLux(lux);
+        });
+        setSubscription(sub);
+        LightSensor.setUpdateInterval(500);
     };
 
     const stopAndSave = () => {
@@ -128,10 +128,7 @@ export default function MeasurementScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F8FAFC',
-    },
+    container: { flex: 1, backgroundColor: '#F8FAFC' },
     header: {
         backgroundColor: '#FFFFFF',
         paddingHorizontal: 20,
@@ -151,15 +148,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    headerTitle: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: '#1E293B',
-    },
-    content: {
-        flex: 1,
-        padding: 20,
-    },
+    headerTitle: { fontSize: 16, fontWeight: '700', color: '#1E293B' },
+    content: { flex: 1, padding: 20 },
     timerCard: {
         backgroundColor: '#FFFFFF',
         borderRadius: 16,
@@ -172,18 +162,8 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 2,
     },
-    timerLabel: {
-        fontSize: 13,
-        color: '#94A3B8',
-        fontWeight: '500',
-        marginBottom: 8,
-    },
-    timerValue: {
-        fontSize: 36,
-        fontWeight: '700',
-        color: '#2563EB',
-        fontFamily: 'monospace',
-    },
+    timerLabel: { fontSize: 13, color: '#94A3B8', fontWeight: '500', marginBottom: 8 },
+    timerValue: { fontSize: 36, fontWeight: '700', color: '#2563EB', fontFamily: 'monospace' },
     gaugeCard: {
         backgroundColor: '#FFFFFF',
         borderRadius: 20,
@@ -205,15 +185,8 @@ const styles = StyleSheet.create({
         marginTop: 12,
         gap: 6,
     },
-    statusDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-    },
-    statusText: {
-        fontSize: 13,
-        fontWeight: '600',
-    },
+    statusDot: { width: 8, height: 8, borderRadius: 4 },
+    statusText: { fontSize: 13, fontWeight: '600' },
     recommendation: {
         fontSize: 13,
         color: '#64748B',
@@ -221,11 +194,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         lineHeight: 18,
     },
-    statsRow: {
-        flexDirection: 'row',
-        gap: 12,
-        marginBottom: 20,
-    },
+    statsRow: { flexDirection: 'row', gap: 12, marginBottom: 20 },
     statBox: {
         flex: 1,
         backgroundColor: '#FFFFFF',
@@ -238,22 +207,9 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 2,
     },
-    statLabel: {
-        fontSize: 12,
-        color: '#94A3B8',
-        fontWeight: '500',
-        marginBottom: 8,
-    },
-    statValue: {
-        fontSize: 28,
-        fontWeight: '700',
-        color: '#1E293B',
-    },
-    statUnit: {
-        fontSize: 12,
-        color: '#64748B',
-        marginTop: 4,
-    },
+    statLabel: { fontSize: 12, color: '#94A3B8', fontWeight: '500', marginBottom: 8 },
+    statValue: { fontSize: 28, fontWeight: '700', color: '#1E293B' },
+    statUnit: { fontSize: 12, color: '#64748B', marginTop: 4 },
     saveBtn: {
         backgroundColor: '#10B981',
         padding: 16,
@@ -262,9 +218,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    saveBtnText: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        fontWeight: '600',
-    },
+    saveBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
 });

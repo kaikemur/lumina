@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
-import { useLightSensor } from 'expo-sensors';
+import { LightSensor } from 'expo-sensors'; // <-- IMPORTAÇÃO CORRIGIDA
 import { Ionicons } from '@expo/vector-icons';
 import LuxGauge from '../components/LuxGauge';
 import InfoCard from '../components/InfoCard';
@@ -9,7 +9,6 @@ import { useMeasurements } from '../context/MeasurementContext';
 import { getLuxStatus, getRecommendation } from '../utils/luxUtils';
 
 export default function DashboardScreen({ navigation }) {
-    const { isAvailable } = useLightSensor;
     const { currentLux, setCurrentLux, saveMeasurement } = useMeasurements();
     const [isMeasuring, setIsMeasuring] = useState(false);
     const [subscription, setSubscription] = useState(null);
@@ -26,7 +25,7 @@ export default function DashboardScreen({ navigation }) {
     }, []);
 
     const checkSensor = async () => {
-        const available = await isAvailable();
+        const available = await LightSensor.isAvailableAsync(); // <-- MÉTODO CORRIGIDO
         if (!available) {
             navigation.navigate('SensorUnavailable');
         }
@@ -37,12 +36,13 @@ export default function DashboardScreen({ navigation }) {
             subscription.remove();
         }
 
-        const sub = useLightSensor.addListener((data) => {
+        const sub = LightSensor.addListener((data) => {
+            // <-- MÉTODO CORRIGIDO
             setCurrentLux(data.illuminance || 0);
         });
 
         setSubscription(sub);
-        useLightSensor.setUpdateInterval(500);
+        LightSensor.setUpdateInterval(500);
         setIsMeasuring(true);
     };
 
@@ -139,10 +139,7 @@ export default function DashboardScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F8FAFC',
-    },
+    container: { flex: 1, backgroundColor: '#F8FAFC' },
     header: {
         backgroundColor: '#FFFFFF',
         paddingHorizontal: 20,
@@ -154,18 +151,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#E2E8F0',
     },
-    headerLabel: {
-        fontSize: 12,
-        color: '#94A3B8',
-        fontWeight: '500',
-        letterSpacing: 0.5,
-    },
-    headerTitle: {
-        fontSize: 22,
-        fontWeight: '800',
-        color: '#1E293B',
-        marginTop: 4,
-    },
+    headerLabel: { fontSize: 12, color: '#94A3B8', fontWeight: '500', letterSpacing: 0.5 },
+    headerTitle: { fontSize: 22, fontWeight: '800', color: '#1E293B', marginTop: 4 },
     notificationBtn: {
         width: 40,
         height: 40,
@@ -174,10 +161,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    content: {
-        flex: 1,
-        padding: 20,
-    },
+    content: { flex: 1, padding: 20 },
     gaugeCard: {
         backgroundColor: '#FFFFFF',
         borderRadius: 20,
@@ -190,12 +174,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 2,
     },
-    gaugeLabel: {
-        fontSize: 14,
-        color: '#64748B',
-        fontWeight: '500',
-        marginBottom: 20,
-    },
+    gaugeLabel: { fontSize: 14, color: '#64748B', fontWeight: '500', marginBottom: 20 },
     statusBadge: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -205,15 +184,8 @@ const styles = StyleSheet.create({
         marginTop: 12,
         gap: 6,
     },
-    statusDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-    },
-    statusText: {
-        fontSize: 13,
-        fontWeight: '600',
-    },
+    statusDot: { width: 8, height: 8, borderRadius: 4 },
+    statusText: { fontSize: 13, fontWeight: '600' },
     recommendation: {
         fontSize: 13,
         color: '#64748B',
@@ -221,12 +193,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         lineHeight: 18,
     },
-    infoCards: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 12,
-        marginBottom: 20,
-    },
+    infoCards: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 20 },
     measureBtn: {
         backgroundColor: '#2563EB',
         padding: 16,
@@ -236,12 +203,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginBottom: 20,
     },
-    stopBtn: {
-        backgroundColor: '#EF4444',
-    },
-    measureBtnText: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        fontWeight: '600',
-    },
+    stopBtn: { backgroundColor: '#EF4444' },
+    measureBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
 });
